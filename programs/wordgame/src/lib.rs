@@ -13,33 +13,28 @@ declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 pub mod wordgame {
     use super::*;
 
-    pub fn initialize_create_game(ctx: Context<CreateGame>, name: String, min_deposit: u64) -> ProgramResult {
+    pub fn initialize_create_game(ctx: Context<CreateGame>, name: String, min_deposit: u64) -> Result<()> {
         handle_create_game(ctx, name, min_deposit);
-
         Ok(())
     }
 
-    pub fn initialize_join_game(ctx: Context<JoinGame>) -> ProgramResult {
+    pub fn initialize_join_game(ctx: Context<JoinGame>) -> Result<()> {
         handle_join_game(ctx);
-
         Ok(())
     }
 
-    pub fn initialize_play_game(ctx: Context<PlayGame>, deposited_amount: u64) -> ProgramResult {
+    pub fn initialize_play_game(ctx: Context<PlayGame>, deposited_amount: u64) -> Result<()> {
         handle_play_game(ctx, deposited_amount);
-
         Ok(())
     }
 
-    pub fn initialize_random_word(ctx: Context<ChooseRandomWord>) -> ProgramResult {
+    pub fn initialize_random_word(ctx: Context<ChooseRandomWord>) -> Result<()> {
         handle_random_word(ctx);
-
         Ok(())
     }
 
-    pub fn reset_word(ctx: Context<ResetWord>) -> ProgramResult {
+    pub fn reset_word(ctx: Context<ResetWord>) -> Result<()> {
         handle_reset_word(ctx);
-
         Ok(())
     }
 }
