@@ -23,7 +23,7 @@ pub fn handle_play_game(ctx: Context<PlayGame>, deposited_amount: u64) -> Result
     player.deposited_amount += deposited_amount;
 
     // Transfer funds to the Game Escrow account
-    **ctx.accounts.to = game.escrow_account;
+    **ctx.accounts.to = game.game_pot;
     **ctx.accounts.transfer_authority = game.owner;
 
     Ok(())

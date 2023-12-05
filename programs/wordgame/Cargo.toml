@@ -17,3 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.29.0"
+random_word = { version = "0.4.1", features = ["en"] }

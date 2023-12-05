@@ -1,4 +1,5 @@
 use anchor_lang::prelude::*;
+use random_word::Lang;
 use crate::state::state::{GameData, WordVault};
 
 #[derive(Accounts)]
@@ -6,7 +7,7 @@ pub struct CreateGame<'info> {
     #[account(
         init,
         payer = owner,
-        space = 8 + 128,
+        space = GameData::MAX_SIZE,
         seeds = [b"game", user.key().as_ref()],
         bump
     )]
@@ -16,15 +17,21 @@ pub struct CreateGame<'info> {
         seeds = [b"wordVault"],
         bump,
         payer = owner,
-        space = 8
+        space = WordVault::MAX_SIZE
     )]
     pub word_vault: Account<'info, WordVault>,
     pub owner: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
 
-pub fn handle_create_game(ctx: Context<CreateGame>, name: String, min_deposit: u64) -> Result<()> {
+pub fn handle_create_game(ctx: Context<CreateGame>, name: String, min_deposit: u8) -> Result<()> {
     let game = &mut ctx.accounts.game;
+    let word_vault = &mut ctx.accounts.word_vault;
+
+    let word = random_word::gen(Lang::En);
+
+    word_vault.secret_word = String::from(word);
+
     game.name = name;
     msg!("Game name: {}", game.name);
 
@@ -34,8 +41,14 @@ pub fn handle_create_game(ctx: Context<CreateGame>, name: String, min_deposit: u
     game.owner = *ctx.accounts.owner.key;
     msg!("Game owner: {}", game.owner);
 
-    game.escrow_account = Pubkey::new_unique(); // Create a unique Pubkey for the Game Escrow account
-    msg!("Game escrow account: {}", game.escrow_account);
+    game.game_pot = 0;
+    msg!("Game escrow account: {}", game.game_pot);
+
+    game.total_games_won = 0;
+    msg!("Total Games Won: {}", game.total_games_won);
+
+    game.total_winnings = 0;
+    msg!("Total Winnings: {}", game.total_winnings);
 
     Ok(())
 }
